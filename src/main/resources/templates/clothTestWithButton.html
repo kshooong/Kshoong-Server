@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .gifContainer {
+            position: absolute;
+        }
+        .gifBox {
+            position: relative;
+            top: 80px;
+            left: 100px;
+<!--            opacity: 0.3;-->
+        }
+        .kshoongImg {
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div th:text = "${data}"/>
+
+<button th:each="imgName : ${imgs}" type="button" th:data-img-name="${imgName}" onclick="buttonControl(this)" value="false" th:text="'get ' + ${imgName}"></button>
+<div id="gifBody"></div>
+
+
+<script>
+    function fixSync(){
+        const images = document.querySelectorAll('img');
+
+        images.forEach((img, index) => {
+            img.src = img.src;
+        });
+    }
+
+    function buttonControl(button){
+        const name = button.dataset.imgName;
+        if(button.value==="true"){
+            deleteGif(name);
+            button.value = "false";
+            button.innerText = "get "+name;
+        }else{
+            button.value = "true";
+            button.innerText = "del "+name;
+            getData(name);
+        }
+    }
+
+    function getData(n) {
+        axios.get('/rest/getGif', {params:{name:n}}, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+                console.log(response);
+                addNewGif(n, response.data);
+            })
+            .catch(error => console.error(error));
+    }
+
+    function deleteGif(n){
+        const image = document.querySelector('#gif'+n);
+        image.remove();
+    }
+
+    function addNewGif(n, imgSrc) {
+        const parent = document.getElementById('gifBody');
+
+        const container = document.createElement('div');
+        container.className = 'gifContainer';
+        container.id = 'gif'+n;
+
+        const box = document.createElement('div');
+        box.className = 'gifBox';
+
+        const gif = document.createElement('img');
+        gif.className = 'kshoongImg';
+        gif.src = imgSrc;
+
+        box.appendChild(gif);
+        container.appendChild(box);
+        parent.appendChild(container);
+    }
+</script>
+</body>
+</html>
