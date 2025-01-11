@@ -4,16 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        .gifContainer {
-            position: absolute;
-        }
-        .gifBox {
-            position: relative;
-            top: 80px;
-            left: 100px;
-<!--            opacity: 0.3;-->
-        }
         .kshoongImg {
+            position: absolute;
             height: 100px;
             width: 100px;
         }
@@ -22,11 +14,7 @@
 </head>
 <body>
 <div id="gifBody">
-    <div class="gifContainer" id="default">
-        <div class="gifBox">
-            <img class="kshoongImg" src="/images/기본.gif"/>
-        </div>
-    </div>
+    <img class="kshoongImg" id="default" src="/images/기본.gif"/>
 </div>
 
 
@@ -55,7 +43,7 @@
 
     // 전체 삭제
     function deleteAll(){
-        const images = document.querySelectorAll('.gifContainer');
+        const images = document.querySelectorAll('.kshoongImg');
 
         images.forEach((img, index) => {
             if(img.id!=='default'){
@@ -73,20 +61,12 @@
     function addNewGif(n, imgSrc) {
         const parent = document.getElementById('gifBody');
 
-        const container = document.createElement('div');
-        container.className = 'gifContainer';
-        container.id = 'gif'+n;
-
-        const box = document.createElement('div');
-        box.className = 'gifBox';
-
         const gif = document.createElement('img');
         gif.className = 'kshoongImg';
+        gif.id = 'gif'+n;
         gif.src = imgSrc;
 
-        box.appendChild(gif);
-        container.appendChild(box);
-        parent.appendChild(container);
+        parent.appendChild(gif);
     }
 </script>
 </body>
